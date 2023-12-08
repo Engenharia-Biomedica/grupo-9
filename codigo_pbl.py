@@ -129,39 +129,39 @@ def tela_busca():
                     
                 # Criando subset de mesma bactéria e mesmo antibiótico
                 sub = raw[raw['antibiotico'].str.contains(antibiotico)]
-                
-                # Calculando as porcentagens
-                counts = (sub['resposta'] == "Resistente").sum()
-                N = len(sub['resposta'])
-                percent = round((counts/N)*100, 2)
-                st.divider()
-                st.write("#", antibiotico) 
-                st.write("### Porcentagem de resistência = ", str(percent), "%")
-                if periodo[0]==periodo[1]: # seria legal se desse pra fazer isso numa linha só
-                    st.write("(", str(N), " casos de ", bacteria, " tratados com ", antibiotico, " em ", str(periodo[0]), ")")
-                else:
-                    st.write("(", str(N), " casos de ", bacteria, " tratados com ", antibiotico, " de ", str(periodo[0]), " a ", str(periodo[1]), ")")
+                if len(sub. index) != 0:
+                    # Calculando as porcentagens
+                    counts = (sub['resposta'] == "Resistente").sum()
+                    N = len(sub['resposta'])
+                    percent = round((counts/N)*100, 2)
+                    st.divider()
+                    st.write("#", antibiotico) 
+                    st.write("### Porcentagem de resistência = ", str(percent), "%")
+                    if periodo[0]==periodo[1]: # seria legal se desse pra fazer isso numa linha só
+                        st.write("(", str(N), " casos de ", bacteria, " tratados com ", antibiotico, " em ", str(periodo[0]), ")")
+                    else:
+                        st.write("(", str(N), " casos de ", bacteria, " tratados com ", antibiotico, " de ", str(periodo[0]), " a ", str(periodo[1]), ")")
+                        
+                    # Ajustando os dados para os gráficos
+                    time_graph = sub.pivot_table(index='ano_remedio', columns='resposta', aggfunc='size', fill_value=0)                
+                    row_sums = time_graph.sum(axis=1)
+                    time_graph = time_graph.div(row_sums, axis=0) * 100
+                    space_graph = sub.pivot_table(index='local', columns='resposta', aggfunc='size', fill_value=0)
+                    row_sums = space_graph.sum(axis=1)
+                    space_graph = space_graph.div(row_sums, axis=0) * 100
                     
-                # Ajustando os dados para os gráficos
-                time_graph = sub.pivot_table(index='ano_remedio', columns='resposta', aggfunc='size', fill_value=0)                
-                row_sums = time_graph.sum(axis=1)
-                time_graph = time_graph.div(row_sums, axis=0) * 100
-                space_graph = sub.pivot_table(index='local', columns='resposta', aggfunc='size', fill_value=0)
-                row_sums = space_graph.sum(axis=1)
-                space_graph = space_graph.div(row_sums, axis=0) * 100
-                
-                # Plotando os gráficos
-                lb, rb = st.columns(2)
-                with lb:
-                    if st.button("Evolução pelo tempo", key = i_lb):
-                        st.bar_chart(data = time_graph, x = None, y = None, color=None, width=0, height=0, use_container_width=True)
-                            
-                with rb:
-                    if st.button("Distribuição espacial", key = i_rb):
-                        st.bar_chart(data = space_graph, x=None, y=None, color=None, width=0, height=0, use_container_width=True)
-                            
-                i_lb += 1
-                i_rb -= 1         
+                    # Plotando os gráficos
+                    lb, rb = st.columns(2)
+                    with lb:
+                        if st.button("Evolução pelo tempo", key = i_lb):
+                            st.bar_chart(data = time_graph, x = None, y = None, color=None, width=0, height=0, use_container_width=True)
+                                
+                    with rb:
+                        if st.button("Distribuição espacial", key = i_rb):
+                            st.bar_chart(data = space_graph, x=None, y=None, color=None, width=0, height=0, use_container_width=True)
+                                
+                    i_lb += 1
+                    i_rb -= 1         
 
     
 
